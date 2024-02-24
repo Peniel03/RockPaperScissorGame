@@ -1,5 +1,4 @@
 ﻿using RockPaperScissorGame;
-
 class Program
 {
     static void Main(string[] args)
@@ -28,16 +27,12 @@ class Program
                 results[i, j] = rules.DetermineWinner(i, j);
             }
         }
-
         HelpTableGenerator.Render(movesList, results);
-
         byte[] computerKey = KeyGenerator.GenerateKey();
         int computerMoveIndex = random.Next(movesList.Count);
         string computerMove = rules.GetMove(computerMoveIndex);
         string hmac = HMACGenerator.GenerateHMAC(computerMove, key);
-
         Console.WriteLine($"HMAC: {hmac}");
-
         Console.WriteLine("Available moves:");
         for (int i = 0; i < movesList.Count; i++)
         {
@@ -45,34 +40,27 @@ class Program
         }
         Console.WriteLine("0 - exit");
         Console.WriteLine("? - help");
-
         int userMoveIndex = -1;
         do
         {
             Console.Write("Enter your move: ");
             string input = Console.ReadLine(); 
-
             if (input == "?")
             {
                 HelpTableGenerator.Render(movesList, results);
                 continue;
             }
-
             if (!int.TryParse(input, out userMoveIndex) || userMoveIndex < 0 || userMoveIndex > movesList.Count)
             {
                 Console.WriteLine("Invalid input. Please enter a valid move or '?' for help.");
                 continue;
             }
-
             if (userMoveIndex == 0)
                 return;
-
-            userMoveIndex--; // Adjusting to zero-based index
-
+            userMoveIndex--;
             string userMove = rules.GetMove(userMoveIndex);
             Console.WriteLine($"Your move: {userMove}");
             Console.WriteLine($"Computer move: {computerMove}");
-
             string winner = rules.DetermineWinner(userMoveIndex, computerMoveIndex);
             if (winner == "User")
                 Console.WriteLine("You win!");
@@ -80,9 +68,7 @@ class Program
                 Console.WriteLine("Computer win!");
             else
                 Console.WriteLine("It's a draw!");
-
             Console.WriteLine($"HMAC key: {BitConverter.ToString(computerKey).Replace("-", "")}");
-
         } while (userMoveIndex != 0);
     }
 }

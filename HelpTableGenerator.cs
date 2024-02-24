@@ -1,61 +1,36 @@
 ﻿using ConsoleTables;
-using PowerArgs;
-using System.Collections.Generic;
-
 
 namespace RockPaperScissorGame
 { 
+    /// <summary>
+    /// The Help table generator class help to generate a table using the ConsoleTables library
+    /// </summary>
     public class HelpTableGenerator
     {
+        /// <summary>
+        /// This method places the table header and ensure that the table will remains stable 
+        /// with any number of additional rows and columns
+        /// </summary>
+        /// <param name="moves"></param>
+        /// <param name="results"></param>
         public static void Render(List<string> moves, string[,] results)
         {
             int n = moves.Count;
-            // Get the maximum length of moves for padding
-            int maxMoveLength = 0;
-            foreach (string move in moves)
-            {
-                maxMoveLength = Math.Max(maxMoveLength, move.Length);
-            }
-            Console.WriteLine("Help Table:");
-            Console.Write("+-------------+");
-            for (int i = 0; i < n; i++)
-            {
-                Console.Write(new string('-', maxMoveLength + 2) + "+");
-            }
-            Console.WriteLine();
+            var table = new ConsoleTable("v PC\\User >");
+            table.AddColumn(moves.ToArray());
 
-            Console.Write("| v PC\\User > |");
             for (int i = 0; i < n; i++)
             {
-                Console.Write($" {moves[i].PadLeft(maxMoveLength)} |");
-            }
-            Console.WriteLine();
-            // Print the separator row
-            Console.Write("+--------------+");
-            for (int i = 0; i < n; i++)
-            {
-                Console.Write(new string('-', maxMoveLength + 2) + "+");
-            }
-            Console.WriteLine();
-
-            // Print the data rows
-            for (int i = 0; i < n; i++)
-            {
-                Console.Write($"| {moves[i].PadLeft(12)} |");
+                var row = new string[n + 1];
+                row[0] = moves[i];
                 for (int j = 0; j < n; j++)
                 {
-                    Console.Write($" {results[i, j],-4} |");
+                    row[j + 1] = results[i, j];
                 }
-                Console.WriteLine();
+                table.AddRow(row);
             }
-
-            // Print the bottom border
-            Console.Write("+--------------+");
-            for (int i = 0; i < n; i++)
-            {
-                Console.Write(new string('-', maxMoveLength + 2) + "+");
-            }
-            Console.WriteLine();
+            Console.WriteLine("Help Table:");
+            table.Write();
         }
     }
 }
